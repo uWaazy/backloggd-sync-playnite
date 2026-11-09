@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net462</TargetFramework>
+    <LangVersion>7.3</LangVersion>
+    <OutputType>Library</OutputType>
+    <RootNamespace>BackloggdSync</RootNamespace>
+    <AssemblyName>BackloggdSync</AssemblyName>
+    <Version>0.4.2</Version>
+    <OutputPath>..\bin\$(Configuration)\</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <EnableDefaultCompileItems>true</EnableDefaultCompileItems>
+    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+  </PropertyGroup>
+
+  <!-- Personal module: only when the Personal folder exists (it is not published and never goes into the package). -->
+  <PropertyGroup Condition="Exists('$(MSBuildProjectDirectory)\Personal')">
+    <DefineConstants>$(DefineConstants);PERSONAL</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="Playnite.SDK">
+      <HintPath Condition="'$(PlayniteSdkPath)' != ''">$(PlayniteSdkPath)</HintPath>
+      <HintPath Condition="'$(PlayniteSdkPath)' == '' And Exists('$(LOCALAPPDATA)\Playnite\Playnite.SDK.dll')">$(LOCALAPPDATA)\Playnite\Playnite.SDK.dll</HintPath>
+      <HintPath Condition="'$(PlayniteSdkPath)' == '' And !Exists('$(LOCALAPPDATA)\Playnite\Playnite.SDK.dll')">..\Playnite.SDK.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="extension.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <Resource Include="Resources\pluginicon.png" />
+  </ItemGroup>
+</Project>

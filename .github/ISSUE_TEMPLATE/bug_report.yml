@@ -1,0 +1,46 @@
+name: Bug report
+description: Something did not send, sent wrong data, or the plugin misbehaved
+labels: ["bug"]
+body:
+  - type: input
+    id: plugin_version
+    attributes:
+      label: Plugin version
+      description: Playnite > Settings > Extensions, or the release you installed.
+      placeholder: "0.3.0"
+    validations:
+      required: true
+  - type: input
+    id: playnite_version
+    attributes:
+      label: Playnite version
+      placeholder: "10.x"
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: Which game, what you expected on Backloggd and what you got instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. ...
+        2. ...
+  - type: textarea
+    id: logs
+    attributes:
+      label: Log lines
+      description: Lines containing [BLS] from %AppData%\Playnite\extensions.log. They contain game names and dates, never passwords or cookies. Review before posting.
+      render: text
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I am signed in to Backloggd in the plugin settings
+        - label: I looked for an existing issue

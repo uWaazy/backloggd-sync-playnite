@@ -1,0 +1,14 @@
+Id: 59963214-572c-4467-9a24-625b20d7f53d
+Name: Backloggd Sync (Beta)
+Author: uWaazy
+Version: 0.4.2
+Module: BackloggdSync.dll
+Type: GenericPlugin
+Icon: Resources/pluginicon.png
+Links:
+  - Name: GitHub
+    Url: https://github.com/uWaazy/backloggd-sync
+  - Name: Issues Tracker
+    Url: https://github.com/uWaazy/backloggd-sync/issues
+Description: BETA - Sends your Playnite playtime (one journal session per day), status and rating to your Backloggd account. Unofficial and not affiliated with Backloggd.
+RequiredApiVersion: 5.0.0
