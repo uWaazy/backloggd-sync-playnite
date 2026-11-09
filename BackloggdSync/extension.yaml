@@ -10,5 +10,7 @@ Links:
     Url: https://github.com/uWaazy/backloggd-sync
   - Name: Issues Tracker
     Url: https://github.com/uWaazy/backloggd-sync/issues
+  - Name: Support on Ko-fi
+    Url: https://ko-fi.com/uWaazy
 Description: BETA - Sends your Playnite playtime (one journal session per day), status and rating to your Backloggd account. Unofficial and not affiliated with Backloggd.
 RequiredApiVersion: 5.0.0

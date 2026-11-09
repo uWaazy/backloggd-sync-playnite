@@ -1,7 +1,11 @@
 # Backloggd Sync (Beta)
 
+[![Apoyar en Ko-fi](https://img.shields.io/badge/Ko--fi-Apoyar-FF5E5B?style=flat&logo=ko-fi&logoColor=white)](https://ko-fi.com/uWaazy)
+
 Plugin de Playnite que envia tus sesiones de juego, estado, nota y plataforma a tu diario de [Backloggd](https://backloggd.com).
 
+> **Beta.** Esta es la primera versión pública. Funciona en el día a día, pero todavía puede tener asperezas. Por favor, reporta los problemas (consulta [Cómo reportar problemas](#cómo-reportar-problemas)).
+>
 > **No oficial.** Sin relacion con Backloggd ni aprobado por el.
 
 [English](README.md) | [Portugues](README.pt-BR.md)
@@ -35,6 +39,12 @@ Por juego (clic derecho > Backloggd Sync): vincular el juego, enviar estado y no
 ## Como reportar problemas
 
 Abre una [issue](../../issues/new/choose) con las versiones del plugin y de Playnite y lo que paso. Adjunta las lineas con `[BLS]` de `%AppData%\Playnite\extensions.log`. Incluyen nombres de juegos y fechas, pero no contrasenas ni cookies; revisalas antes de compartirlas.
+
+## Apoyo
+
+Si este plugin te resulta útil y quieres apoyar su desarrollo continuo:
+
+[![Apoyar en Ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/uWaazy)
 
 ## Licencia
 

@@ -142,7 +142,8 @@ namespace BackloggdSync
             ["update.confirm"] = new[] { "Deseja baixar e instalar a versão {0} do Backloggd Sync agora?", "Do you want to download and install Backloggd Sync {0} now?", "¿Deseas descargar e instalar Backloggd Sync {0} ahora?" },
             ["update.downloading"] = new[] { "Baixando atualização ({0})...", "Downloading update ({0})...", "Descargando actualización ({0})..." },
             ["update.noupdate"] = new[] { "O Backloggd Sync já está na versão mais recente ({0}).", "Backloggd Sync is already up to date ({0}).", "Backloggd Sync ya está en la versión más reciente ({0})." },
-            ["update.failed"] = new[] { "Não foi possível verificar ou baixar a atualização: {0}", "Could not check or download the update: {0}", "No se pudo verificar o descargar la actualización: {0}" }
+            ["update.failed"] = new[] { "Não foi possível verificar ou baixar a atualização: {0}", "Could not check or download the update: {0}", "No se pudo verificar o descargar la actualización: {0}" },
+            ["btn.sponsor"] = new[] { "Apoiar no Ko-fi", "Support on Ko-fi", "Apoyar en Ko-fi" }
         };
     }
 }

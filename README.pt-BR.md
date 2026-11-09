@@ -1,7 +1,11 @@
 # Backloggd Sync (Beta)
 
+[![Apoiar no Ko-fi](https://img.shields.io/badge/Ko--fi-Apoiar-FF5E5B?style=flat&logo=ko-fi&logoColor=white)](https://ko-fi.com/uWaazy)
+
 Plugin do Playnite que envia suas sessoes de jogo, status, nota e plataforma para o seu diario do [Backloggd](https://backloggd.com).
 
+> **Beta.** Esta é a primeira versão pública. Ela funciona no dia a dia, mas ainda pode ter arestas. Por favor, reporte os problemas (veja [Como reportar problemas](#como-reportar-problemas)).
+>
 > **Nao oficial.** Sem relacao com o Backloggd nem aprovado por ele.
 
 [English](README.md) | [Espanol](README.es.md)
@@ -35,6 +39,12 @@ Por jogo (botao direito > Backloggd Sync): vincular o jogo, enviar status e nota
 ## Como reportar problemas
 
 Abra uma [issue](../../issues/new/choose) com as versoes do plugin e do Playnite e o que aconteceu. Anexe as linhas com `[BLS]` do arquivo `%AppData%\Playnite\extensions.log`. Elas trazem nomes de jogos e datas, mas nao senhas nem cookies; revise antes de compartilhar.
+
+## Apoio
+
+Se este plugin é útil para você e quiser apoiar o desenvolvimento contínuo:
+
+[![Apoiar no Ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/uWaazy)
 
 ## Licenca
 

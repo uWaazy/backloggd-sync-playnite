@@ -1,14 +1,38 @@
-name: Feature request
-description: Suggest an improvement
+name: Feature Request / Sugestão de Melhoria
+description: Suggest an enhancement or new feature / Sugira uma nova funcionalidade ou melhoria
+title: "[Feature]: "
 labels: ["enhancement"]
 body:
-  - type: textarea
-    id: idea
+  - type: markdown
     attributes:
-      label: What would you like?
+      value: |
+        Tem uma ideia para tornar o Backloggd Sync ainda melhor? Descreva sua proposta abaixo!
+        *Have an idea to make Backloggd Sync even better? Describe your suggestion below!*
+  - type: textarea
+    id: summary
+    attributes:
+      label: Feature Summary / Resumo da Sugestão
+      description: A clear and concise description of the proposed feature.
+      placeholder: "Ex: Allow custom playthrough names in Backloggd, or filter sync by platform..."
     validations:
       required: true
   - type: textarea
-    id: why
+    id: motivation
     attributes:
-      label: Why is it useful?
+      label: Motivation & Problem / Motivação e Problema
+      description: What problem does this solve, or why would this feature be useful?
+      placeholder: "Ex: Currently, I have games on X platform that I want to exclude from..."
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Proposed Solution or Alternatives / Soluções ou Alternativas Consideradas
+      description: Describe how you envision this working, or any workarounds you currently use.
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I searched existing issues and feature requests / Verifiquei se não há sugestão similar já aberta
+          required: true

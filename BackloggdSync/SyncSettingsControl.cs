@@ -64,6 +64,7 @@ namespace BackloggdSync
             row.Children.Add(Btn("btn.check", CheckLogin));
             row.Children.Add(Btn("btn.sendnow", () => { _plugin.Engine.RetryUnlinked(); _plugin.RunQueueInBackground(0); }));
             row.Children.Add(Btn("btn.checkupdate", () => _plugin.Updates.CheckForUpdates(true)));
+            row.Children.Add(Btn("btn.sponsor", () => { try { System.Diagnostics.Process.Start("https://ko-fi.com/uWaazy"); } catch { } }));
             _main.Children.Add(row);
 
             _main.Children.Add(Check("opt.auto", _settings.AutoSyncOnStop, v => _settings.AutoSyncOnStop = v));

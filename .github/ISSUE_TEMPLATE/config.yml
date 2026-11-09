@@ -1,5 +1,8 @@
 blank_issues_enabled: false
 contact_links:
-  - name: Read the README first
+  - name: Support on Ko-fi
+    url: https://ko-fi.com/uWaazy
+    about: Support the development of Backloggd Sync!
+  - name: Read the Documentation
     url: https://github.com/uWaazy/backloggd-sync#readme
-    about: Install steps, how linking works and how to collect the log lines.
+    about: Instructions on installation, linking games and troubleshooting.

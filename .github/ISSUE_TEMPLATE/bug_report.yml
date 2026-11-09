@@ -1,46 +1,60 @@
-name: Bug report
-description: Something did not send, sent wrong data, or the plugin misbehaved
+name: Bug Report / Relatório de Bug
+description: Report an issue, incorrect sync, or unexpected behavior / Relate um problema ou falha na sincronização
+title: "[Bug]: "
 labels: ["bug"]
 body:
+  - type: markdown
+    attributes:
+      value: |
+        Obrigado por ajudar a melhorar o Backloggd Sync! Por favor, preencha as informações abaixo com o máximo de detalhes possível.
+        *Thank you for helping improve Backloggd Sync! Please fill out the details below.*
   - type: input
     id: plugin_version
     attributes:
-      label: Plugin version
-      description: Playnite > Settings > Extensions, or the release you installed.
-      placeholder: "0.3.0"
+      label: Plugin Version / Versão do Plugin
+      description: Found in Playnite > Settings > Extensions, or from the installed .pext release.
+      placeholder: "0.4.2"
     validations:
       required: true
   - type: input
     id: playnite_version
     attributes:
-      label: Playnite version
-      placeholder: "10.x"
+      label: Playnite Version / Versão do Playnite
+      description: Found in Playnite > About.
+      placeholder: "10.35"
     validations:
       required: true
   - type: textarea
-    id: what
+    id: description
     attributes:
-      label: What happened?
-      description: Which game, what you expected on Backloggd and what you got instead.
+      label: Description of the Problem / Descrição do Problema
+      description: What happened? What did you expect vs what actually happened?
+      placeholder: "Ex: The playtime for game X was recorded as 0 minutes, or status did not change on Backloggd..."
     validations:
       required: true
   - type: textarea
     id: steps
     attributes:
-      label: Steps to reproduce
+      label: Steps to Reproduce / Passos para Reproduzir
+      description: How can we reproduce this behavior?
       placeholder: |
-        1. ...
-        2. ...
+        1. Open game '...'
+        2. Play for 10 minutes and close the game
+        3. Check Backloggd journal or pending queue
+    validations:
+      required: true
   - type: textarea
     id: logs
     attributes:
-      label: Log lines
-      description: Lines containing [BLS] from %AppData%\Playnite\extensions.log. They contain game names and dates, never passwords or cookies. Review before posting.
-      render: text
+      label: Log Lines / Linhas de Log ([BLS])
+      description: Attach the lines containing `[BLS]` from `%AppData%\Playnite\extensions.log`. (Passwords and cookies are never stored, but verify before posting).
+      render: shell
   - type: checkboxes
     id: checks
     attributes:
-      label: Checks
+      label: Preliminary Checks / Verificações Preliminares
       options:
-        - label: I am signed in to Backloggd in the plugin settings
-        - label: I looked for an existing issue
+        - label: I am signed in to Backloggd in the plugin settings (Conectado como <usuário>)
+          required: true
+        - label: I searched existing issues to ensure this is not a duplicate / Verifiquei se não há issue duplicada
+          required: true

@@ -1,7 +1,11 @@
 # Backloggd Sync (Beta)
 
+[![Support on Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat&logo=ko-fi&logoColor=white)](https://ko-fi.com/uWaazy)
+
 Playnite plugin that sends your play sessions, status, rating and platform to your [Backloggd](https://backloggd.com) journal.
 
+> **Beta.** This is the first public release. It works day to day, but expect rough edges and please report bugs (see [Reporting problems](#reporting-problems)).
+>
 > **Unofficial.** Not affiliated with or endorsed by Backloggd.
 
 [Portugues](README.pt-BR.md) | [Espanol](README.es.md)
@@ -35,6 +39,12 @@ Per game (right-click > Backloggd Sync): link the game, send status and rating n
 ## How to report problems
 
 Open an [issue](../../issues/new/choose) with the plugin and Playnite versions and what happened. Attach the lines containing `[BLS]` from `%AppData%\Playnite\extensions.log`. They contain game names and dates but no passwords or cookies; review them before sharing.
+
+## Support
+
+If you enjoy this plugin and would like to support its continued development:
+
+[![Support on Ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/uWaazy)
 
 ## License
 
