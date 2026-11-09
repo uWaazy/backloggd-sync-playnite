@@ -1,6 +1,5 @@
 # Backloggd Sync (Beta)
 
-[![Apoiar no Ko-fi](https://img.shields.io/badge/Ko--fi-Apoiar-FF5E5B?style=flat&logo=ko-fi&logoColor=white)](https://ko-fi.com/uWaazy)
 
 Plugin do Playnite que envia suas sessoes de jogo, status, nota e plataforma para o seu diario do [Backloggd](https://backloggd.com).
 

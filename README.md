@@ -1,6 +1,5 @@
 # Backloggd Sync (Beta)
 
-[![Support on Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=flat&logo=ko-fi&logoColor=white)](https://ko-fi.com/uWaazy)
 
 Playnite plugin that sends your play sessions, status, rating and platform to your [Backloggd](https://backloggd.com) journal.
 
