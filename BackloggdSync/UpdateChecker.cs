@@ -12,7 +12,7 @@ namespace BackloggdSync
 {
     public class UpdateChecker
     {
-        private const string RepoUrl = "https://api.github.com/repos/uWaazy/backloggd-sync/releases/latest";
+        private const string RepoUrl = "https://api.github.com/repos/uWaazy/backloggd-sync-playnite/releases/latest";
         private const string UserAgent = "Playnite-BackloggdSync";
 
         private readonly IPlayniteAPI _api;
