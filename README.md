@@ -2,7 +2,7 @@
 
 Playnite plugin that sends your play sessions, status, rating and platform to your [Backloggd](https://backloggd.com) journal.
 
-> **Unofficial.** Not affiliated with or endorsed by Backloggd. Backloggd has no public API, so the plugin works through the website itself (a Playnite browser window with your own sign-in). It never sees or stores your password. To keep you signed in across restarts it saves the site session cookies in the plugin data folder (`session-cookies.json`); anyone with that file could use your session, so do not share it (delete it to forget the session). If the site shows an anti-bot check or limits requests, sending pauses and you are notified.
+> **Unofficial.** Not affiliated with or endorsed by Backloggd.
 
 [Portugues](README.pt-BR.md) | [Espanol](README.es.md)
 
