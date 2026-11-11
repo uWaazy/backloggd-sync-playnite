@@ -18,10 +18,11 @@ namespace BackloggdSync
 
         private PluginSettings _settings;
 
+        /// <summary>Estado do jogo selecionado, lido pelo tema (ver ThemeState).</summary>
+        public ThemeState Theme { get; } = new ThemeState();
+
         public override Guid Id => Guid.Parse("59963214-572c-4467-9a24-625b20d7f53d");
 
-        public CaptureStore Store { get; private set; }
-        public CaptureRunner Runner { get; private set; }
         public SyncEngine Engine { get; private set; }
         public UpdateChecker Updates { get; private set; }
 
@@ -29,12 +30,17 @@ namespace BackloggdSync
         {
             Properties = new GenericPluginProperties { HasSettings = true };
 
+            // Tema: {PluginSettings Plugin=BackloggdSync, Path=HasData | Linked | Ignored | Title | PendingGame | PendingTotal | Account}
+            AddSettingsSupport(new AddSettingsSupportArgs
+            {
+                SourceName = "BackloggdSync",
+                SettingsRoot = "Theme"
+            });
+
             _settings = LoadPluginSettings<PluginSettings>() ?? new PluginSettings();
             _settings.AttachOwner(this);
             L.Configure(_settings.Language, GetPlayniteLanguage());
 
-            Store = new CaptureStore(GetPluginUserDataPath());
-            Runner = new CaptureRunner(api, Logger);
             Engine = new SyncEngine(api, _settings, Logger);
             Updates = new UpdateChecker(api, Logger, _settings);
             BackloggdWeb.CookieFile = Path.Combine(GetPluginUserDataPath(), "session-cookies.json");
@@ -56,6 +62,35 @@ namespace BackloggdSync
         {
             try { return PlayniteApi.ApplicationSettings.Language; }
             catch { return ""; }
+        }
+
+        // ---------------------------------------------------------------- integração com temas
+
+        public void RefreshTheme(Game game)
+        {
+            try
+            {
+                if (game == null) { Theme.Clear(); return; }
+                var link = Engine.GetLink(game.Id);
+                var gid = game.Id.ToString();
+                int pendingGame = 0, pendingTotal = 0;
+                var items = _settings.Pending.ToArray();
+                pendingTotal = items.Length;
+                foreach (var p in items) if (p.GameId == gid) pendingGame++;
+                var linked = link != null && link.BackloggdId > 0;
+                Theme.Update(!string.IsNullOrEmpty(_settings.Username), linked, link != null && link.Ignored,
+                    linked ? link.Title : "", pendingGame, pendingTotal, _settings.Username);
+            }
+            catch (Exception ex)
+            {
+                Logger.Warn("[BLS] Falha ao atualizar o estado do tema: " + ex.Message);
+            }
+        }
+
+        public override void OnGameSelected(OnGameSelectedEventArgs args)
+        {
+            var list = args == null ? null : args.NewValue;
+            RefreshTheme(list != null && list.Count == 1 ? list[0] : null);
         }
 
         public override ISettings GetSettings(bool firstRunSettings)
@@ -334,6 +369,7 @@ namespace BackloggdSync
                 }
 
                 Engine.SetLink(game.Id, hit);
+                RefreshTheme(game);
 
                 // Vinculou: envia na hora tudo do jogo (itens que estavam parados, status e nota).
                 Engine.Enqueue(game.Id, null, 0);

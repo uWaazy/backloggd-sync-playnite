@@ -57,8 +57,6 @@ namespace BackloggdSync
         public Dictionary<string, GameLink> Links { get; set; } = new Dictionary<string, GameLink>();
         public List<PendingItem> Pending { get; set; } = new List<PendingItem>();
 
-        public string LastExportUtc { get; set; } = "";
-
         public bool VerifySettings(out List<string> errors)
         {
             errors = new List<string>();

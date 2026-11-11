@@ -78,14 +78,6 @@ namespace BackloggdSync
             _pendPanel = new StackPanel();
             _main.Children.Add(_pendPanel);
             RefreshPending(true);
-
-            var capture = new Expander
-            {
-                Header = L.T("capture.header"),
-                Margin = new Thickness(0, 20, 0, 0),
-                Content = new CaptureSettingsControl(_plugin, _settings)
-            };
-            _main.Children.Add(capture);
         }
 
         private string StatusText()

@@ -47,35 +47,6 @@ namespace BackloggdSync
         private static readonly Dictionary<string, string[]> Table = new Dictionary<string, string[]>
         {
             ["app.name"] = new[] { "Backloggd Sync", "Backloggd Sync", "Backloggd Sync" },
-            ["title"] = new[] { "Backloggd Sync: modo captura", "Backloggd Sync: capture mode", "Backloggd Sync: modo captura" },
-            ["intro"] = new[]
-            {
-                "Ferramenta para mapear como o Backloggd funciona (busca, status, nota, diário e calendário). Siga os passos abaixo, um por vez. Em cada passo abre uma janela do site com uma barra de instruções; faça o que ela pede e feche a janela. Nenhum dado é enviado a ninguém: tudo fica num arquivo no seu computador.",
-                "Tool to map how Backloggd works (search, status, rating, journal and calendar). Follow the steps below, one at a time. Each step opens a site window with an instruction bar; do what it says and close the window. Nothing is sent to anyone: everything stays in a file on your computer.",
-                "Herramienta para mapear cómo funciona Backloggd (búsqueda, estado, nota, diario y calendario). Sigue los pasos, uno por vez. Cada paso abre una ventana del sitio con una barra de instrucciones; haz lo que pide y cierra la ventana. No se envía nada a nadie: todo queda en un archivo en tu equipo."
-            },
-            ["privacy"] = new[]
-            {
-                "Senhas, tokens e cookies são mascarados (***). O arquivo gerado contém o seu usuário, nomes de jogos e datas: confira antes de enviar. Use um jogo de teste e remova o que criar no final (há um passo para isso).",
-                "Passwords, tokens and cookies are masked (***). The generated file contains your username, game names and dates: review it before sharing. Use a test game and remove what you create at the end (there is a step for that).",
-                "Las contraseñas, tokens y cookies se enmascaran (***). El archivo generado contiene tu usuario, nombres de juegos y fechas: revísalo antes de enviarlo. Usa un juego de prueba y borra lo que crees al final (hay un paso para eso)."
-            },
-            ["progress"] = new[] { "Progresso: {0} de {1} passos concluídos", "Progress: {0} of {1} steps done", "Progreso: {0} de {1} pasos completados" },
-            ["step.label"] = new[] { "Passo {0}", "Step {0}", "Paso {0}" },
-            ["step.start"] = new[] { "Iniciar passo", "Start step", "Iniciar paso" },
-            ["step.redo"] = new[] { "Refazer", "Redo", "Rehacer" },
-            ["step.done"] = new[] { "Concluído ({0} requisições, {1})", "Done ({0} requests, {1})", "Completado ({0} solicitudes, {1})" },
-            ["step.pending"] = new[] { "Pendente", "Pending", "Pendiente" },
-            ["step.empty"] = new[] { "Nenhuma requisição foi registrada neste passo. Refaça e confirme que fez a ação na janela.", "No requests were recorded in this step. Redo it and make sure you did the action in the window.", "No se registró ninguna solicitud en este paso. Rehazlo y confirma que hiciste la acción en la ventana." },
-            ["banner.title"] = new[] { "Passo {0}/{1}: {2}", "Step {0}/{1}: {2}", "Paso {0}/{1}: {2}" },
-            ["banner.hint"] = new[] { "Quando terminar, feche esta janela. (clique nesta barra para recolher)", "When finished, close this window. (click this bar to collapse)", "Al terminar, cierra esta ventana. (haz clic en esta barra para ocultarla)" },
-            ["btn.export"] = new[] { "Gerar arquivo para enviar", "Create file to send", "Crear archivo para enviar" },
-            ["btn.folder"] = new[] { "Abrir pasta das capturas", "Open captures folder", "Abrir carpeta de capturas" },
-            ["btn.clear"] = new[] { "Apagar capturas", "Delete captures", "Borrar capturas" },
-            ["clear.confirm"] = new[] { "Apagar todas as capturas guardadas neste computador?", "Delete all captures saved on this computer?", "¿Borrar todas las capturas guardadas en este equipo?" },
-            ["export.none"] = new[] { "Faça pelo menos um passo antes de gerar o arquivo.", "Do at least one step before creating the file.", "Haz al menos un paso antes de crear el archivo." },
-            ["export.ok"] = new[] { "Arquivo gerado:\n{0}\n\nEnvie esse arquivo (ele abre numa pasta). Confira antes: ele contém seu usuário, jogos e datas.", "File created:\n{0}\n\nSend this file (its folder opens). Review it first: it contains your username, games and dates.", "Archivo creado:\n{0}\n\nEnvía este archivo (se abre su carpeta). Revísalo antes: contiene tu usuario, juegos y fechas." },
-            ["export.err"] = new[] { "Não foi possível gerar o arquivo: {0}", "Could not create the file: {0}", "No se pudo crear el archivo: {0}" },
             ["sync.intro"] = new[]
             {
                 "Envia o tempo jogado (por dia), o status e a nota dos seus jogos do Playnite para o seu diário no Backloggd. Não é oficial e não tem ligação com o Backloggd. Você entra no site pela janela do próprio Backloggd; o plugin nunca vê nem guarda a sua senha.",
@@ -100,7 +71,6 @@ namespace BackloggdSync
                 "Time goes to a Log named \"Playnite\" in the game's journal; your other Logs are never changed. Each send is verified by reading the site back, and failures stay queued for retry.",
                 "El tiempo va a un Log llamado \"Playnite\" en el diario del juego; tus otros Logs nunca se modifican. Cada envío se verifica releyendo el sitio y, si algo falla, queda en cola para reintentar."
             },
-            ["capture.header"] = new[] { "Modo captura (avançado)", "Capture mode (advanced)", "Modo captura (avanzado)" },
             ["notify.login"] = new[] { "Backloggd Sync: entre no Backloggd nas configurações do plugin para enviar as pendências.", "Backloggd Sync: sign in to Backloggd in the plugin settings to send pending items.", "Backloggd Sync: inicia sesión en Backloggd en los ajustes del plugin para enviar los pendientes." },
             ["notify.blocked"] = new[] { "Backloggd Sync: o site bloqueou ou limitou as requisições (proteção anti-robô). O envio foi pausado; tente de novo mais tarde.", "Backloggd Sync: the site blocked or rate-limited requests (anti-bot protection). Sending was paused; try again later.", "Backloggd Sync: el sitio bloqueó o limitó las solicitudes (protección anti-robot). El envío se pausó; inténtalo más tarde." },
             ["notify.stuck"] = new[] { "Backloggd Sync: o envio travou e foi cancelado. Tente de novo; se repetir, mande o extensions.log.", "Backloggd Sync: the send got stuck and was cancelled. Try again; if it repeats, send the extensions.log.", "Backloggd Sync: el envío se atascó y se canceló. Inténtalo de nuevo; si se repite, envía el extensions.log." },
