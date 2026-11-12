@@ -12,7 +12,7 @@ namespace BackloggdSync
 {
     public class UpdateChecker
     {
-        private const string RepoUrl = "https://api.github.com/repos/uWaazy/backloggd-sync-playnite/releases/latest";
+        private const string RepoUrl = "https://api.github.com/repos/uWaazy/backloggd-sync-playnite/releases";
         private const string UserAgent = "Playnite-BackloggdSync";
 
         private readonly IPlayniteAPI _api;
@@ -57,38 +57,47 @@ namespace BackloggdSync
             using (var reader = new StreamReader(stream))
             {
                 var json = await reader.ReadToEndAsync();
-                var root = JObject.Parse(json);
+                var array = JArray.Parse(json);
+                if (array == null || array.Count == 0) return null;
 
-                var tag = (string)root["tag_name"] ?? "";
-                var ver = ParseVersion(tag);
-                if (ver == null) return null;
-
-                var assets = root["assets"] as JArray;
-                if (assets == null) return null;
-
-                string downloadUrl = null;
-                string fileName = null;
-                foreach (var a in assets)
+                foreach (var item in array.OfType<JObject>())
                 {
-                    var name = (string)a["name"] ?? "";
-                    if (name.EndsWith(".pext", StringComparison.OrdinalIgnoreCase))
+                    if ((bool?)item["draft"] == true) continue;
+
+                    var tag = (string)item["tag_name"] ?? "";
+                    var ver = ParseVersion(tag);
+                    if (ver == null) continue;
+
+                    var assets = item["assets"] as JArray;
+                    if (assets == null) continue;
+
+                    string downloadUrl = null;
+                    string fileName = null;
+                    foreach (var a in assets)
                     {
-                        downloadUrl = (string)a["browser_download_url"];
-                        fileName = name;
-                        break;
+                        var name = (string)a["name"] ?? "";
+                        if (name.EndsWith(".pext", StringComparison.OrdinalIgnoreCase))
+                        {
+                            downloadUrl = (string)a["browser_download_url"];
+                            fileName = name;
+                            break;
+                        }
+                    }
+
+                    if (!string.IsNullOrEmpty(downloadUrl))
+                    {
+                        return new ReleaseInfo
+                        {
+                            Tag = tag,
+                            Version = ver,
+                            DownloadUrl = downloadUrl,
+                            FileName = fileName,
+                            Body = (string)item["body"] ?? ""
+                        };
                     }
                 }
 
-                if (string.IsNullOrEmpty(downloadUrl)) return null;
-
-                return new ReleaseInfo
-                {
-                    Tag = tag,
-                    Version = ver,
-                    DownloadUrl = downloadUrl,
-                    FileName = fileName,
-                    Body = (string)root["body"] ?? ""
-                };
+                return null;
             }
         }
 
