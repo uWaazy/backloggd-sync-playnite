@@ -64,6 +64,7 @@ namespace BackloggdSync
             ["opt.auto"] = new[] { "Enviar automaticamente ao fechar um jogo", "Send automatically when a game closes", "Enviar automáticamente al cerrar un juego" },
             ["opt.time"] = new[] { "Enviar o tempo jogado (uma sessão por dia no diário)", "Send playtime (one session per day in the journal)", "Enviar el tiempo jugado (una sesión por día en el diario)" },
             ["opt.status"] = new[] { "Enviar o status (Jogado, Jogando, Backlog)", "Send status (Played, Playing, Backlog)", "Enviar el estado (Jugado, Jugando, Backlog)" },
+            ["opt.master"] = new[] { "Marcar o troféu (Mastered) quando todas as conquistas estiverem desbloqueadas", "Set the trophy (Mastered) when all achievements are unlocked", "Marcar el trofeo (Mastered) cuando todos los logros estén desbloqueados" },
             ["opt.rating"] = new[] { "Enviar a nota (Avaliação do usuário do Playnite)", "Send rating (Playnite user score)", "Enviar la nota (puntuación de usuario de Playnite)" },
             ["opt.note"] = new[]
             {

@@ -71,6 +71,7 @@ namespace BackloggdSync
             _main.Children.Add(Check("opt.time", _settings.SyncPlaytime, v => _settings.SyncPlaytime = v));
             _main.Children.Add(Check("opt.status", _settings.SyncStatus, v => _settings.SyncStatus = v));
             _main.Children.Add(Check("opt.rating", _settings.SyncRating, v => _settings.SyncRating = v));
+            _main.Children.Add(Check("opt.master", _settings.MasterOnFullAchievements, v => _settings.MasterOnFullAchievements = v));
             _main.Children.Add(Text(L.T("opt.note"), 11, FontWeights.Normal, 0.6, new Thickness(0, 8, 0, 0)));
 
             _main.Children.Add(Text(L.T("pend.header"), 15, FontWeights.SemiBold, 1, new Thickness(0, 22, 0, 0)));

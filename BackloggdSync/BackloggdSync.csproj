@@ -5,7 +5,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>BackloggdSync</RootNamespace>
     <AssemblyName>BackloggdSync</AssemblyName>
-    <Version>0.4.2</Version>
+    <Version>0.4.3</Version>
     <OutputPath>..\bin\$(Configuration)\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <UseWPF>true</UseWPF>

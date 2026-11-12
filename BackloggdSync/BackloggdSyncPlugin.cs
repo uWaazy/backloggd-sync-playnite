@@ -203,6 +203,7 @@ namespace BackloggdSync
 
 #if PERSONAL
             foreach (var m in PersonalGameMenu(games)) yield return m;
+            foreach (var m in PersonalHoursGameMenu(games)) yield return m;
 #endif
 
             var ignoreAll = games.All(g => { var l = Engine.GetLink(g.Id); return l != null && l.Ignored; });
@@ -225,6 +226,7 @@ namespace BackloggdSync
 
 #if PERSONAL
             foreach (var m in PersonalMainMenu()) yield return m;
+            foreach (var m in PersonalHoursMenu()) yield return m;
             foreach (var m in PersonalYgpMenu()) yield return m;
             foreach (var m in PersonalPlatformMenu()) yield return m;
 #endif

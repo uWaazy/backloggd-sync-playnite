@@ -17,6 +17,10 @@ namespace BackloggdSync
         /// <summary>Último status/nota enviados: só reenviamos quando o valor no Playnite muda.</summary>
         public string LastStatus { get; set; } = "";
         public int LastRating { get; set; }
+        /// <summary>true = já conferimos/limpamos a marca "Mastered" indevida deste jogo.</summary>
+        public bool MasterChecked { get; set; }
+        /// <summary>true = já enviamos o troféu deste jogo (não reenviamos nem mexemos se você o remover).</summary>
+        public bool MasterSent { get; set; }
     }
 
     /// <summary>Trabalho pendente: tempo de um dia e/ou conferência de status e nota.</summary>
@@ -53,6 +57,8 @@ namespace BackloggdSync
         public bool SyncPlaytime { get; set; } = true;
         public bool SyncStatus { get; set; } = true;
         public bool SyncRating { get; set; } = true;
+        /// <summary>Marca o troféu (Mastered) no Backloggd quando 100% das conquistas estão desbloqueadas.</summary>
+        public bool MasterOnFullAchievements { get; set; } = true;
 
         public Dictionary<string, GameLink> Links { get; set; } = new Dictionary<string, GameLink>();
         public List<PendingItem> Pending { get; set; } = new List<PendingItem>();
