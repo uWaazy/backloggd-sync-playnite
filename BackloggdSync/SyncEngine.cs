@@ -189,6 +189,19 @@ namespace BackloggdSync
             return false;
         }
 
+        /// <summary>True quando o status do Playnite indica jogo concluído (zerado, 100%, platinado...).</summary>
+        public bool IsCompletedStatus(Game g)
+        {
+            try
+            {
+                if (g == null || g.CompletionStatusId == Guid.Empty) return false;
+                var cs = _api.Database.CompletionStatuses.Get(g.CompletionStatusId);
+                if (cs == null || string.IsNullOrWhiteSpace(cs.Name)) return false;
+                return HasAny(StripAccents(cs.Name), "complet", "100%", "platin", "beaten", "zerad", "finaliz", "termin", "conclu", "finished", "mastered", "masteriz");
+            }
+            catch { return false; }
+        }
+
         /// <summary>
         /// Status de conclusão do Playnite -> botão do Backloggd ("play", "playing" ou "backlog"). Null = não mexer.
         /// O reconhecimento é por palavras (pt/en/es), pois o nome do status muda com o idioma do Playnite.
@@ -448,18 +461,27 @@ namespace BackloggdSync
 
             try
             {
-                // Vigia: se o envio travar (navegador interno que não responde), a trava é liberada e você é avisado,
-                // em vez de ficar "enviando..." para sempre.
-                var core = RunCoreAsync();
-                var finished = await Task.WhenAny(core, Task.Delay(TimeSpan.FromMinutes(4)));
-                if (finished != core)
+                // Vigia: se o envio travar (navegador interno que não responde), cancela o token, libera a trava e avisa,
+                // em vez de ficar "enviando..." para sempre ou deixar duas execuções concorrentes.
+                using (var coreCts = new CancellationTokenSource())
+                using (var delayCts = new CancellationTokenSource())
                 {
-                    _logger.Warn("[BLS] The send did not finish in 4 minutes; giving up on this run (it will be tried again next time).");
-                    LastProblem = "stuck";
-                    Notify("stuck", L.T("notify.stuck"), NotificationType.Error);
-                    return 0;
+                    var core = RunCoreAsync(coreCts.Token);
+                    var finished = await Task.WhenAny(core, Task.Delay(TimeSpan.FromMinutes(4), delayCts.Token));
+                    if (finished != core)
+                    {
+                        coreCts.Cancel();
+                        _logger.Warn("[BLS] The send did not finish in 4 minutes; giving up on this run (it will be tried again next time).");
+                        LastProblem = "stuck";
+                        Notify("stuck", L.T("notify.stuck"), NotificationType.Error);
+                        await Task.WhenAny(core, Task.Delay(5000));
+                        if (!core.IsCompleted)
+                            _ = core.ContinueWith(t => { var _ = t.Exception; }, TaskContinuationOptions.OnlyOnFaulted);
+                        return 0;
+                    }
+                    delayCts.Cancel();
+                    return await core;
                 }
-                return await core;
             }
             finally
             {
@@ -467,7 +489,7 @@ namespace BackloggdSync
             }
         }
 
-        private async Task<int> RunCoreAsync()
+        private async Task<int> RunCoreAsync(CancellationToken ct)
         {
             int done = 0, errors = 0;
             LastProblem = "";
@@ -477,12 +499,13 @@ namespace BackloggdSync
                 if (work.Count == 0) { _logger.Info("[BLS] Queue is empty."); return 0; }
                 _logger.Info("[BLS] Sending " + work.Count + " pending item(s).");
 
-                using (var web = new BackloggdWeb(_api, _logger))
+                using (var web = new BackloggdWeb(_api, _logger) { CancellationToken = ct })
                 {
                     var api = new BackloggdApi(web, _settings, _logger);
 
                     string user;
                     try { user = await api.GetLoggedUserAsync(); }
+                    catch (OperationCanceledException) when (ct.IsCancellationRequested) { return done; }
                     catch (BackloggdBlockedException ex)
                     {
                         _logger.Warn("[BLS] " + ex.Message);
@@ -513,9 +536,14 @@ namespace BackloggdSync
 
                     foreach (var item in work)
                     {
+                        ct.ThrowIfCancellationRequested();
                         try
                         {
                             if (await ProcessAsync(api, item)) done++;
+                        }
+                        catch (OperationCanceledException) when (ct.IsCancellationRequested)
+                        {
+                            return done;
                         }
                         catch (BackloggdBlockedException ex)
                         {
@@ -624,6 +652,26 @@ namespace BackloggdSync
                     _logger.Info("[BLS] '" + game.Name + "' status '" + wanted + "': " + (sc ? "sent" : "already set on the site"));
                     lock (_lock) { link.LastStatus = wanted; _settings.Save(); }
                 }
+            }
+
+            // Troféu (Mastered): só com 100% das conquistas desbloqueadas (plugins de conquistas do Playnite).
+            // Sem isso, o troféu nunca é marcado. Reparo único: tira o troféu indevido que versões antigas marcavam.
+            if (_settings.MasterOnFullAchievements && !link.MasterSent && AchievementReader.IsComplete(_api.Paths.ExtensionsDataPath, game.Id))
+            {
+                var mr = await api.UpsertDaysAsync(link.BackloggdId, link.Slug, new SortedDictionary<DateTime, int>(), null, true);
+                if (mr.MasterOk)
+                {
+                    _logger.Info("[BLS] '" + game.Name + "': 100% achievements -> trophy sent.");
+                    lock (_lock) { link.MasterSent = true; link.MasterChecked = true; _settings.Save(); }
+                }
+            }
+            else if (!link.MasterChecked)
+            {
+                if (!IsCompletedStatus(game) && !AchievementReader.IsComplete(_api.Paths.ExtensionsDataPath, game.Id))
+                {
+                    await api.UpsertDaysAsync(link.BackloggdId, link.Slug, new SortedDictionary<DateTime, int>(), null, false);
+                }
+                lock (_lock) { link.MasterChecked = true; _settings.Save(); }
             }
 
             if (_settings.SyncRating)

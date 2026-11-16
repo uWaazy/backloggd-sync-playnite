@@ -329,13 +329,15 @@ namespace BackloggdSync
         {
             public int Changed { get; set; }
             public bool Verified { get; set; }
+            /// <summary>true = o Log "Playnite" existe e está com o troféu no valor pedido.</summary>
+            public bool MasterOk { get; set; }
         }
 
         /// <summary>
         /// Grava vários dias de uma vez no Log "Playnite" (cada dia passa a ter exatamente o valor pedido). Dias que já
         /// estão certos são ignorados. Depois relê o site e confere todos.
         /// </summary>
-        public async Task<DaysResult> UpsertDaysAsync(int gameId, string slug, SortedDictionary<DateTime, int> targets, int? platformId = null)
+        public async Task<DaysResult> UpsertDaysAsync(int gameId, string slug, SortedDictionary<DateTime, int> targets, int? platformId = null, bool? masterValue = null)
         {
             await EnsureUserIdAsync(gameId, slug);
 
@@ -355,10 +357,14 @@ namespace BackloggdSync
                 deltaTotal += kv.Value - cur;
             }
 
-            var result = new DaysResult { Changed = todo.Count, Verified = true };
-            if (todo.Count == 0) return result;
+            // Troféu ("Mastered"): só muda quando pedido (100% das conquistas, ou reparo de versões antigas).
+            bool fixMaster = masterValue.HasValue && mine != null &&
+                string.Equals(Str(mine["is_master"]), "true", StringComparison.OrdinalIgnoreCase) != masterValue.Value;
 
-            var firstDay = todo.Keys.First();
+            var result = new DaysResult { Changed = todo.Count, Verified = true, MasterOk = masterValue.HasValue && mine != null && !fixMaster };
+            if (todo.Count == 0 && !fixMaster) return result;
+
+            var firstDay = todo.Count > 0 ? todo.Keys.First() : DateTime.Today;
             var firstKey = firstDay.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
 
             var f = new List<KeyValuePair<string, string>>();
@@ -385,6 +391,7 @@ namespace BackloggdSync
                     var val = Str(mine[k]);
                     // Plataforma do site: só preenche se o Log ainda não tem uma (nunca troca a que você escolheu).
                     if (k == "platform" && platformId.HasValue && string.IsNullOrEmpty(val)) val = platformId.Value.ToString(CultureInfo.InvariantCulture);
+                    if (k == "is_master" && fixMaster) val = masterValue.Value ? "true" : "false";
                     add("playthroughs[0][" + k + "]", val);
                 }
 
@@ -408,7 +415,7 @@ namespace BackloggdSync
                 add("playthroughs[0][platform]", platformId.HasValue ? platformId.Value.ToString(CultureInfo.InvariantCulture) : "");
                 add("playthroughs[0][hours_played]", "");
                 add("playthroughs[0][mins_played]", "");
-                add("playthroughs[0][is_master]", hasOthers ? "false" : "true");
+                add("playthroughs[0][is_master]", masterValue == true ? "true" : "false"); // troféu só com 100% das conquistas
                 add("playthroughs[0][is_replay]", hasOthers ? "true" : "false");
                 add("playthroughs[0][start_date]", firstKey);
                 add("playthroughs[0][finish_date]", "");
@@ -445,7 +452,7 @@ namespace BackloggdSync
                 newId--;
             }
 
-            int oldTotal = (int)Math.Round(DoubleOr(gl["total_hours"]) * 60 + DoubleOr(gl["total_minutes"]));
+            int oldTotal = (int)Math.Round(DecimalOr(gl["total_hours"]) * 60m + DecimalOr(gl["total_minutes"]), MidpointRounding.AwayFromZero);
             int newTotal = Math.Max(0, oldTotal + deltaTotal);
 
             add("log[id]", Whole(gl["id"]));
@@ -468,9 +475,17 @@ namespace BackloggdSync
             var post = await _web.SendAsync("POST", "/api/user/" + _settings.UserId + "/log/" + gameId, Form(f));
             if (!post.Ok) throw new InvalidOperationException("POST /api/user/.../log/" + gameId + " returned " + post.Status);
 
+            if (fixMaster) _logger.Info("[BLS] Mastered flag set to " + masterValue.Value + " on game " + gameId + ".");
+
             // Confere relendo o site: nada de "achar que funcionou".
             var after = await GetLogAsync(gameId);
             var minePost = FindOurPlaythrough(after);
+            if (masterValue.HasValue)
+            {
+                result.MasterOk = minePost != null && string.Equals(Str(minePost["is_master"]), masterValue.Value ? "true" : "false", StringComparison.OrdinalIgnoreCase);
+                if (!result.MasterOk)
+                    _logger.Warn("[BLS] Mastered flag verification failed for game " + gameId + ": expected " + masterValue.Value + ", site has '" + (minePost == null ? "<none>" : Str(minePost["is_master"])) + "'.");
+            }
             if (platformId.HasValue && minePost != null)
                 _logger.Info("[BLS] Platform sent: " + platformId.Value + ", site has: " + Str(minePost["platform"]));
             foreach (var kv in todo)
@@ -486,11 +501,11 @@ namespace BackloggdSync
             return result;
         }
 
-        private static double DoubleOr(JToken t)
+        private static decimal DecimalOr(JToken t)
         {
-            if (t == null || t.Type == JTokenType.Null) return 0;
-            double d;
-            return double.TryParse(t.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out d) ? d : 0;
+            if (t == null || t.Type == JTokenType.Null) return 0m;
+            decimal d;
+            return decimal.TryParse(t.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out d) ? d : 0m;
         }
 
         private static void WriteDate(Action<string, string> add, string pid, int i, string id, string start, string end, bool edited,

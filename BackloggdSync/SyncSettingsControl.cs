@@ -46,7 +46,7 @@ namespace BackloggdSync
 
         private Button Btn(string key, Action click)
         {
-            var b = new Button { Content = L.T(key), Padding = new Thickness(12, 5, 12, 5), Margin = new Thickness(0, 0, 8, 0) };
+            var b = new Button { Content = L.T(key), Padding = new Thickness(12, 5, 12, 5), Margin = new Thickness(0, 0, 8, 6) };
             b.Click += (s, e) => click();
             return b;
         }
@@ -59,11 +59,12 @@ namespace BackloggdSync
             _status = Text(StatusText(), 13, FontWeights.SemiBold, 1, new Thickness(0, 14, 0, 0));
             _main.Children.Add(_status);
 
-            var row = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 8, 0, 0) };
+            var row = new WrapPanel { Margin = new Thickness(0, 8, 0, 0) };
             row.Children.Add(Btn("btn.login", OpenLogin));
             row.Children.Add(Btn("btn.check", CheckLogin));
             row.Children.Add(Btn("btn.sendnow", () => { _plugin.Engine.RetryUnlinked(); _plugin.RunQueueInBackground(0); }));
             row.Children.Add(Btn("btn.checkupdate", () => _plugin.Updates.CheckForUpdates(true)));
+            row.Children.Add(Btn("btn.diag", ExportDiagnostics));
             row.Children.Add(Btn("btn.sponsor", () => { try { System.Diagnostics.Process.Start("https://ko-fi.com/uWaazy"); } catch { } }));
             _main.Children.Add(row);
 
@@ -71,6 +72,7 @@ namespace BackloggdSync
             _main.Children.Add(Check("opt.time", _settings.SyncPlaytime, v => _settings.SyncPlaytime = v));
             _main.Children.Add(Check("opt.status", _settings.SyncStatus, v => _settings.SyncStatus = v));
             _main.Children.Add(Check("opt.rating", _settings.SyncRating, v => _settings.SyncRating = v));
+            _main.Children.Add(Check("opt.master", _settings.MasterOnFullAchievements, v => _settings.MasterOnFullAchievements = v));
             _main.Children.Add(Text(L.T("opt.note"), 11, FontWeights.Normal, 0.6, new Thickness(0, 8, 0, 0)));
 
             _main.Children.Add(Text(L.T("pend.header"), 15, FontWeights.SemiBold, 1, new Thickness(0, 22, 0, 0)));
@@ -200,6 +202,31 @@ namespace BackloggdSync
             catch (Exception ex)
             {
                 _status.Text = ex.Message;
+            }
+        }
+
+        private void ExportDiagnostics()
+        {
+            try
+            {
+                int lines;
+                var report = DiagnosticExporter.BuildReport(_plugin.PlayniteApi, _settings, _plugin.Engine, out lines);
+
+                var dlg = new Microsoft.Win32.SaveFileDialog
+                {
+                    FileName = "backloggd-sync-diag-" + DateTime.Now.ToString("yyyyMMdd-HHmm") + ".txt",
+                    DefaultExt = ".txt",
+                    Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*"
+                };
+                if (dlg.ShowDialog() != true) return;
+
+                System.IO.File.WriteAllText(dlg.FileName, report, System.Text.Encoding.UTF8);
+                var msg = lines > 0 ? L.T("diag.saved", dlg.FileName, lines) : L.T("diag.empty", dlg.FileName);
+                _plugin.PlayniteApi.Dialogs.ShowMessage(msg, L.T("app.name"));
+            }
+            catch (Exception ex)
+            {
+                _plugin.PlayniteApi.Dialogs.ShowErrorMessage(L.T("diag.error", ex.Message), L.T("app.name"));
             }
         }
     }

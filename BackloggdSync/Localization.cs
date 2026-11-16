@@ -64,6 +64,7 @@ namespace BackloggdSync
             ["opt.auto"] = new[] { "Enviar automaticamente ao fechar um jogo", "Send automatically when a game closes", "Enviar automáticamente al cerrar un juego" },
             ["opt.time"] = new[] { "Enviar o tempo jogado (uma sessão por dia no diário)", "Send playtime (one session per day in the journal)", "Enviar el tiempo jugado (una sesión por día en el diario)" },
             ["opt.status"] = new[] { "Enviar o status (Jogado, Jogando, Backlog)", "Send status (Played, Playing, Backlog)", "Enviar el estado (Jugado, Jugando, Backlog)" },
+            ["opt.master"] = new[] { "Marcar o troféu (Mastered) quando todas as conquistas estiverem desbloqueadas", "Set the trophy (Mastered) when all achievements are unlocked", "Marcar el trofeo (Mastered) cuando todos los logros estén desbloqueados" },
             ["opt.rating"] = new[] { "Enviar a nota (Avaliação do usuário do Playnite)", "Send rating (Playnite user score)", "Enviar la nota (puntuación de usuario de Playnite)" },
             ["opt.note"] = new[]
             {
@@ -113,7 +114,11 @@ namespace BackloggdSync
             ["update.downloading"] = new[] { "Baixando atualização ({0})...", "Downloading update ({0})...", "Descargando actualización ({0})..." },
             ["update.noupdate"] = new[] { "O Backloggd Sync já está na versão mais recente ({0}).", "Backloggd Sync is already up to date ({0}).", "Backloggd Sync ya está en la versión más reciente ({0})." },
             ["update.failed"] = new[] { "Não foi possível verificar ou baixar a atualização: {0}", "Could not check or download the update: {0}", "No se pudo verificar o descargar la actualización: {0}" },
-            ["btn.sponsor"] = new[] { "Apoiar no Ko-fi", "Support on Ko-fi", "Apoyar en Ko-fi" }
+            ["btn.sponsor"] = new[] { "Apoiar no Ko-fi", "Support on Ko-fi", "Apoyar en Ko-fi" },
+            ["btn.diag"] = new[] { "Exportar diagnóstico", "Export diagnostics", "Exportar diagnóstico" },
+            ["diag.saved"] = new[] { "Diagnóstico salvo em:\n{0}\n({1} linha(s) de log). Confira o arquivo antes de enviar.", "Diagnostics saved to:\n{0}\n({1} log line(s)). Review the file before sharing.", "Diagnóstico guardado en:\n{0}\n({1} línea(s) de registro). Revisa el archivo antes de compartirlo." },
+            ["diag.empty"] = new[] { "Diagnóstico salvo em:\n{0}\n(nenhum registro [BLS] encontrado no extensions.log).", "Diagnostics saved to:\n{0}\n(no [BLS] entries found in extensions.log).", "Diagnóstico guardado en:\n{0}\n(no se encontraron entradas [BLS] en extensions.log)." },
+            ["diag.error"] = new[] { "Não foi possível gerar o diagnóstico: {0}", "Could not export diagnostics: {0}", "No se pudo exportar el diagnóstico: {0}" }
         };
     }
 }

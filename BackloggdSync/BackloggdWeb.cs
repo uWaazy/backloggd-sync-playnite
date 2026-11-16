@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using Newtonsoft.Json;
@@ -62,6 +63,8 @@ namespace BackloggdSync
         /// <summary>Arquivo (na pasta de dados do plugin) onde os cookies do Backloggd são guardados. Definido pelo plugin.</summary>
         public static string CookieFile;
 
+        public CancellationToken CancellationToken { get; set; }
+
         private DateTime _lastRequestUtc = DateTime.MinValue;
 
         public BackloggdWeb(IPlayniteAPI api, ILogger logger) : this(api, logger, BaseUrl) { }
@@ -80,7 +83,7 @@ namespace BackloggdSync
             else action();
         }
 
-        private static async Task<bool> NavigateAsync(IWebView view, string url, int timeoutMs)
+        private static async Task<bool> NavigateAsync(IWebView view, string url, int timeoutMs, CancellationToken ct)
         {
             var tcs = new TaskCompletionSource<bool>();
             EventHandler<WebViewLoadingChangedEventArgs> handler = (s, e) =>
@@ -92,7 +95,8 @@ namespace BackloggdSync
             try
             {
                 view.Navigate(url);
-                var done = await Task.WhenAny(tcs.Task, Task.Delay(timeoutMs));
+                var done = await Task.WhenAny(tcs.Task, Task.Delay(timeoutMs, ct));
+                ct.ThrowIfCancellationRequested();
                 return done == tcs.Task;
             }
             finally
@@ -190,15 +194,16 @@ namespace BackloggdSync
             _view = view;
             if (_baseUrl == BaseUrl) RestoreCookies();
 
-            if (!await NavigateAsync(_view, _baseUrl + "/", 30000))
+            if (!await NavigateAsync(_view, _baseUrl + "/", 30000, CancellationToken))
                 throw new BackloggdBlockedException(_baseUrl + " did not load in time.");
 
             for (int i = 0; i < 12; i++)
             {
+                CancellationToken.ThrowIfCancellationRequested();
                 var title = (await EvalStringAsync(_view, "document.title") ?? "").ToLowerInvariant();
                 var challenge = title.Contains("just a moment") || title.Contains("checking your browser") || title.Contains("attention required");
                 if (!challenge && title.Length > 0) { _logger.Info("[BLS] Internal browser ready (title: '" + title + "')."); return; }
-                await Task.Delay(1500);
+                await Task.Delay(1500, CancellationToken);
             }
 
             throw new BackloggdBlockedException(_baseUrl + " is showing a browser check (anti-bot).");
@@ -222,10 +227,11 @@ namespace BackloggdSync
 
         private async Task<WebResult> SendOnceAsync(string method, string path, string formBody, bool html)
         {
+            CancellationToken.ThrowIfCancellationRequested();
             if (_view == null) await OpenAsync();
 
             var wait = 500 - (int)(DateTime.UtcNow - _lastRequestUtc).TotalMilliseconds;
-            if (wait > 0) await Task.Delay(wait);
+            if (wait > 0) await Task.Delay(wait, CancellationToken);
 
             var id = Guid.NewGuid().ToString("N");
             var headers = new JObject();
@@ -256,7 +262,7 @@ namespace BackloggdSync
             var read = "(window.__blq&&window.__blq['" + id + "'])?JSON.stringify(window.__blq['" + id + "']):''";
             for (int i = 0; i < 100; i++)
             {
-                await Task.Delay(300);
+                await Task.Delay(300, CancellationToken);
                 var json = await EvalStringAsync(_view, read);
                 if (string.IsNullOrEmpty(json)) continue;
 
