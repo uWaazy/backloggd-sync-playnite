@@ -66,7 +66,6 @@ namespace BackloggdSync
             }
             return null;
         }
-
         private static bool IsUnlocked(JObject it)
         {
             var flag = it["IsUnlock"];
